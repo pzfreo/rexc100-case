@@ -15,8 +15,8 @@ A robust, 3D-printable enclosure designed for a PID temperature control system. 
 | Component | Spec / Search Term | Notes |
 | :--- | :--- | :--- |
 | **PID Controller** | Inkbird ITC-100 (1/16 DIN) | Standard 48x48mm front panel. |
-| **SSR & Heatsink** | 40A SSR + DIN Rail Heatsink | Footprint approx 50x80mm. |
-| **Power Inlet** | C14 Fused Switched Inlet | Standard 3-pin PC style inlet with rocker switch. |
+| **SSR & Heatsink** | 25A SSR + DIN Rail Heatsink | Footprint approx 50x80mm. |
+| **Power Inlet** | C14 Fused Switched Inlet | Standard 3-pin PC style inlet with rocker switch. 40mm mounting hole separation |
 | **Mains Output** | UK 13A Socket (Panel Mount) | Standard 73mm square faceplate. |
 | **Thermocouple** | K-Type Thermocouple + Terminal Block | 2-pole ceramic or plastic block. |
 

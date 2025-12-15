@@ -11,7 +11,7 @@ USE_INSERTS = False
 # ==============================================================================
 
 # -- Global Settings --
-WALL_THICKNESS = 2.0
+WALL_THICKNESS = 3.0
 ROOF_THICKNESS = 3.0 
 BASE_THICKNESS = 5.0 
 FILLET_R = 4.0       
