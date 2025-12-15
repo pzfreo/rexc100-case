@@ -72,6 +72,7 @@ python case3b.py
 ```
 
   * This will create `pid_inv_shell.stl` and `pid_inv_base.stl` in the same directory.
+  * It also generates STEP files that can be imported into CAD packages.
   * It will output the dimensions in the console.
 
 ### 4\. Visualizing the Design

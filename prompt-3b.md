@@ -1,10 +1,4 @@
-This is the **Master Design Prompt**.
-
-Save this text. If you ever need to recreate this project, modify it, or feed it into another AI to generate the code from scratch, this prompt contains every lesson we learned and every "gotcha" we fixed.
-
-***
-
-### **Master Prompt: Inverted PID Controller Enclosure (Inkbird DIN 1/16)**
+# Master Design Prompt
 
 **Project Goal:**
 Create a two-part 3D printed enclosure for a PID temperature control system. The design is **"Inverted"**: the "Lid" acts as the main structural body (printed upside down), and the "Base" is a removable bottom plate.
