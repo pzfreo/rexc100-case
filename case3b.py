@@ -281,19 +281,19 @@ print("✅ STEP files generated (for Fusion 360).")
 # 7. VISUALIZATION
 # ==============================================================================
 # Uncomment to view in OCP CAD Viewer
-# shell_viz = shell.part.move(Location((0,0, 60)))
-# base_viz = base.part
-# 
-# # Ghosts
-# pid_ghost = Location((pid_x, pid_y, pid_z_center)) * Box(PID_BODY_W, PID_BODY_D, PID_BODY_H)
-# ssr_ghost = Location((ssr_x, ssr_y, ssr_z + SSR_H/2)) * Box(SSR_W, SSR_L, SSR_H)
-# term_ghost = Location((term_x, term_y, BASE_THICKNESS + TERM_BOSS_HEIGHT + TERM_H/2)) * Box(TERM_W, TERM_D, TERM_H)
-# c14_ghost_y = (BOX_L/2) - (C14_GHOST_DEPTH / 2)
-# c14_ghost = Location((c14_x, c14_ghost_y, c14_z)) * Box(C14_BODY_W, C14_GHOST_DEPTH, C14_BODY_H)
-# 
-# show_object(base_viz, name="Base Plate", options={"alpha": 1.0, "color": (0.3, 0.3, 0.3)})
-# show_object(shell_viz, name="Shell (Raised)", options={"alpha": 0.6, "color": (0.9, 0.9, 0.9)})
-# show_object(pid_ghost, name="PID Ghost", options={"alpha": 0.3, "color": (1, 0, 0)})
-# show_object(ssr_ghost, name="SSR Ghost", options={"alpha": 0.3, "color": (0, 1, 0)})
-# show_object(term_ghost, name="Terminal Ghost", options={"alpha": 0.3, "color": (0, 0, 1)})
-# show_object(c14_ghost, name="C14 Ghost (+Cables)", options={"alpha": 0.4, "color": (1.0, 1.0, 0.0)})
+shell_viz = shell.part.move(Location((0,0, 60)))
+base_viz = base.part
+
+# Ghosts
+pid_ghost = Location((pid_x, pid_y, pid_z_center)) * Box(PID_BODY_W, PID_BODY_D, PID_BODY_H)
+ssr_ghost = Location((ssr_x, ssr_y, ssr_z + SSR_H/2)) * Box(SSR_W, SSR_L, SSR_H)
+term_ghost = Location((term_x, term_y, BASE_THICKNESS + TERM_BOSS_HEIGHT + TERM_H/2)) * Box(TERM_W, TERM_D, TERM_H)
+c14_ghost_y = (BOX_L/2) - (C14_GHOST_DEPTH / 2)
+c14_ghost = Location((c14_x, c14_ghost_y, c14_z)) * Box(C14_BODY_W, C14_GHOST_DEPTH, C14_BODY_H)
+
+show_object(base_viz, name="Base Plate", options={"alpha": 1.0, "color": (0.3, 0.3, 0.3)})
+show_object(shell_viz, name="Shell (Raised)", options={"alpha": 0.6, "color": (0.9, 0.9, 0.9)})
+show_object(pid_ghost, name="PID Ghost", options={"alpha": 0.3, "color": (1, 0, 0)})
+show_object(ssr_ghost, name="SSR Ghost", options={"alpha": 0.3, "color": (0, 1, 0)})
+show_object(term_ghost, name="Terminal Ghost", options={"alpha": 0.3, "color": (0, 0, 1)})
+show_object(c14_ghost, name="C14 Ghost (+Cables)", options={"alpha": 0.4, "color": (1.0, 1.0, 0.0)})
