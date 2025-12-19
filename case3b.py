@@ -2,9 +2,19 @@ from build123d import *
 from ocp_vscode import show, show_object, set_port, set_defaults, Camera
 
 # ==============================================================================
-# 1. CONFIGURATION SWITCH
+# 1. CONFIGURATION
 # ==============================================================================
-USE_INSERTS = False 
+# Configure which parts use Heat-Set Inserts vs. Self-Tapping Screws.
+# Valid options: "heat-set", "self-tapping"
+FASTENER_CONFIG = {
+    "ssr": "heat-set",
+    "terminal": "heat-set",
+    "case": "self-tapping",
+    "pid_clamp": "self-tapping",
+    "uk_socket": "self-tapping",
+    "c14_inlet": "self-tapping"
+}
+
 
 # ==============================================================================
 # 2. PARAMETERS
@@ -23,16 +33,16 @@ FOOT_DEPTH = 2.0
 FOOT_OFFSET = 15.0    
 
 # -- Fasteners Logic --
-SCREW_M3_CLEARANCE = 3.4      
-M3_HEAD_DIA = 6.0             
-M3_HEAD_H = 3.0               
+SCREW_M3_CLEARANCE = 3.4
+M3_HEAD_DIA = 6.0
+M3_HEAD_H = 3.0
 
-if USE_INSERTS:
-    THREAD_M3_DIA = 4.2       
-    THREAD_M35_DIA = 4.8      
-else:
-    THREAD_M3_DIA = 2.8       
-    THREAD_M35_DIA = 2.8      
+def get_thread_dia(part_name: str, size: str = "m3") -> float:
+    """Gets the required hole diameter for a given part and screw size."""
+    if FASTENER_CONFIG.get(part_name) == "heat-set":
+        return 4.2 if size == "m3" else 4.8
+    else: # self-tapping
+        return 2.8
 
 # -- Components --
 # Standard 1/16 DIN Inkbird Sizes
@@ -119,7 +129,7 @@ with BuildPart() as base:
     # SSR Holes
     with Locations((ssr_x, ssr_y, 0)):
         with Locations((0, SSR_MOUNT_SPACING/2), (0, -SSR_MOUNT_SPACING/2)):
-            Cylinder(radius=THREAD_M3_DIA/2, height=BASE_THICKNESS + SSR_PLATFORM_HEIGHT + 1.0, align=(Align.CENTER, Align.CENTER, Align.MIN), mode=Mode.SUBTRACT)
+            Cylinder(radius=get_thread_dia("ssr")/2, height=BASE_THICKNESS + SSR_PLATFORM_HEIGHT + 1.0, align=(Align.CENTER, Align.CENTER, Align.MIN), mode=Mode.SUBTRACT)
 
     # Terminal Block Platform
     with Locations((term_x, term_y, BASE_THICKNESS)):
@@ -128,7 +138,7 @@ with BuildPart() as base:
     # Terminal Block Holes
     with Locations((term_x, term_y, 0)):
         with GridLocations(TERM_MOUNT_X, TERM_MOUNT_Y, 2, 2):
-            Cylinder(radius=THREAD_M3_DIA/2, height=BASE_THICKNESS + TERM_BOSS_HEIGHT + 1.0, align=(Align.CENTER, Align.CENTER, Align.MIN), mode=Mode.SUBTRACT)
+            Cylinder(radius=get_thread_dia("terminal")/2, height=BASE_THICKNESS + TERM_BOSS_HEIGHT + 1.0, align=(Align.CENTER, Align.CENTER, Align.MIN), mode=Mode.SUBTRACT)
 
     # Labyrinth Strain Relief
     lab_y = INTERNAL_L/2 - 8.0 
@@ -179,7 +189,7 @@ with BuildPart() as shell:
             (corner_off_x, -corner_off_y), (-corner_off_x, -corner_off_y)
         ):
             Cylinder(radius=5.0, height=post_h, align=(Align.CENTER, Align.CENTER, Align.MAX))
-            Cylinder(radius=THREAD_M3_DIA/2, height=post_h, align=(Align.CENTER, Align.CENTER, Align.MAX), mode=Mode.SUBTRACT)
+            Cylinder(radius=get_thread_dia("case")/2, height=post_h, align=(Align.CENTER, Align.CENTER, Align.MAX), mode=Mode.SUBTRACT)
 
     # PID Cutout
     with Locations((pid_x, -BOX_L/2, pid_z_center)):
@@ -210,7 +220,7 @@ with BuildPart() as shell:
         # Block
         Box(clamp_w, clamp_d, clamp_h, align=(Align.CENTER, Align.CENTER, Align.CENTER))
         # Threaded Hole (Vertical through center)
-        Cylinder(radius=THREAD_M3_DIA/2, height=clamp_h + 20.0, align=(Align.CENTER, Align.CENTER, Align.CENTER), mode=Mode.SUBTRACT)
+        Cylinder(radius=get_thread_dia("pid_clamp")/2, height=clamp_h + 20.0, align=(Align.CENTER, Align.CENTER, Align.CENTER), mode=Mode.SUBTRACT)
 
 
     # Socket Mounts
@@ -223,9 +233,7 @@ with BuildPart() as shell:
 
         with Locations((right_screw_x, 0)):
              Cylinder(radius=SOCKET_BOSS_DIA/2, height=SOCKET_BOSS_DEPTH, align=(Align.CENTER, Align.CENTER, Align.MAX))
-             with Locations((7.5, 0, -SOCKET_BOSS_DEPTH/2)):
-                 Box(15.0, SOCKET_BOSS_DIA, SOCKET_BOSS_DEPTH)
-             Cylinder(radius=THREAD_M35_DIA/2, height=SOCKET_BOSS_DEPTH, align=(Align.CENTER, Align.CENTER, Align.MAX), mode=Mode.SUBTRACT)
+             Cylinder(radius=get_thread_dia("uk_socket", "m3.5")/2, height=SOCKET_BOSS_DEPTH, align=(Align.CENTER, Align.CENTER, Align.MAX), mode=Mode.SUBTRACT)
 
         left_wall_x = -BOX_W/2 + WALL_THICKNESS
         bridge_len = abs(left_screw_x - left_wall_x) + 2.0 
@@ -234,7 +242,7 @@ with BuildPart() as shell:
              Cylinder(radius=SOCKET_BOSS_DIA/2, height=SOCKET_BOSS_DEPTH, align=(Align.CENTER, Align.CENTER, Align.MAX))
              with Locations((-bridge_len/2, 0, -SOCKET_BOSS_DEPTH/2)):
                  Box(bridge_len, SOCKET_BOSS_DIA, SOCKET_BOSS_DEPTH)
-             Cylinder(radius=THREAD_M35_DIA/2, height=SOCKET_BOSS_DEPTH, align=(Align.CENTER, Align.CENTER, Align.MAX), mode=Mode.SUBTRACT)
+             Cylinder(radius=get_thread_dia("uk_socket", "m3.5")/2, height=SOCKET_BOSS_DEPTH, align=(Align.CENTER, Align.CENTER, Align.MAX), mode=Mode.SUBTRACT)
 
     # C14
     c14_inner_wall_y = BOX_L/2 - WALL_THICKNESS
@@ -247,7 +255,7 @@ with BuildPart() as shell:
     with Locations((c14_x, BOX_L/2, c14_z)):
         Box(C14_BODY_W, WALL_THICKNESS*4, C14_BODY_H, mode=Mode.SUBTRACT)
         with Locations((C14_SCREW_PITCH/2, 0), (-C14_SCREW_PITCH/2, 0)):
-             Cylinder(radius=THREAD_M3_DIA/2, height=30.0, rotation=(90,0,0), mode=Mode.SUBTRACT)
+             Cylinder(radius=get_thread_dia("c14_inlet")/2, height=30.0, rotation=(90,0,0), mode=Mode.SUBTRACT)
 
     # Lid Vents
     with BuildSketch(Plane.XY.offset(BOX_H)):
@@ -265,7 +273,9 @@ with BuildPart() as shell:
 # 6. EXPORT
 # ==============================================================================
 print(f"Shell Dimensions: {BOX_W:.1f} x {BOX_L:.1f} x {BOX_H:.1f} mm")
-print(f"Mode: {'PRODUCTION (INSERTS)' if USE_INSERTS else 'PROTOTYPE (DIRECT SCREW)'}")
+print("Fastener Configuration:")
+for part, fastener_type in FASTENER_CONFIG.items():
+    print(f"  - {part}: {fastener_type}")
 
 # Export STLs (For 3D Printing / Slicers)
 export_stl(base.part, "pid_inv_base.stl")
@@ -280,7 +290,6 @@ print("✅ STEP files generated (for Fusion 360).")
 # ==============================================================================
 # 7. VISUALIZATION
 # ==============================================================================
-# Uncomment to view in OCP CAD Viewer
 shell_viz = shell.part.move(Location((0,0, 60)))
 base_viz = base.part
 
